@@ -41,6 +41,4 @@ if (!($resourceGroup)) {
 
 # Template Deployment
 #$templateFileName = @(".\ADForest-deploy.json", ".\ADForest-deploy.json") # these are the parameter files
-foreach ($template in $templateFilePath) {
-    New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -Name MyTestLab$i -TemplateFile $templateFilePath   
-}
+New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -Name MyTestLab -TemplateFile $templateFilePath

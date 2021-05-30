@@ -13,13 +13,6 @@
             "type": "string",
             "defaultValue": "[resourceGroup().location]"
         },
-        "sasToken":{
-            "type":"string",
-            "defaultValue":"?sv=2020-02-10&ss=f&srt=sco&sp=rwl&se=2024-03-03T00:55:23Z&st=2021-05-18T15:55:23Z&spr=https&sig=8LIhtlcL0W6jgmPoM0WIlw616EfiCA37yP%2BmBsdIFQ4%3D",
-            "metadata":{
-                "description": "Shared Access Signature, create this in on the storage account where you host the DSC files"    
-            }
-        },
         "domainName":{
             "type":"string",
             "defaultValue":"chiefslab.local",
@@ -29,7 +22,7 @@
         },
         "filePath":{
             "type":"string",
-            "defaultValue":"https://armtestingsa.file.core.usgovcloudapi.net/dscfiles/",
+            "defaultValue":"https://raw.githubusercontent.com/signalwarrant/ARM-Templates/main/ADForest-SpotInstance/",
             "metadata":{
                 "description": "Path in your storage account where the DSC resources are located."
             }
@@ -189,7 +182,7 @@
         },
         "WIN10Count":{
             "type":"int",
-            "defaultValue": 3,
+            "defaultValue": 1,
             "metadata":{
                 "description": "Number of Windows 10 VMs to deploy"
             }
@@ -310,7 +303,7 @@
         "labvNetName": "[concat(parameters('myLabName'), '-vNET')]",
         "nsgName": "[concat(parameters('myLabName'), '-NSG')]",
         "configFile": "CreateADPDC.zip",
-        "configVmScriptFile": "[concat(parameters('filePath'), variables('configFile'), parameters('sasToken'))]",
+        "configVmScriptFile": "[concat(parameters('filePath'), 'DSC/', variables('configFile'))]",
         "operatingSystemValues": {
             "Server2012R2": {
                 "PublisherValue": "MicrosoftWindowsServer",
@@ -332,19 +325,19 @@
         "vm1PIPName": "[concat(parameters('dcName'), '-PIP')]",
         "TEMPLATES": {
             "SVR2019": {
-                "Link": "[concat(parameters('filePath'), 'svr2019.json', parameters('sasToken'))]"
+                "Link": "[concat(parameters('filePath'), 'nestedtemplates/SVR2019.json')]"
             },
             "SVR2016": {
-                "Link": "[concat(parameters('filePath'), 'svr2016.json', parameters('sasToken'))]"
+                "Link": "[concat(parameters('filePath'), 'nestedtemplates/SVR2016.json')]"
             },
             "SVR2012": {
-                "Link": "[concat(parameters('filePath'), 'svr2012.json', parameters('sasToken'))]"
+                "Link": "[concat(parameters('filePath'), 'nestedtemplates/SVR2012.json')]"
             },
             "WIN10": {
-                "Link": "[concat(parameters('filePath'), 'Win10.json', parameters('sasToken'))]"
+                "Link": "[concat(parameters('filePath'), 'nestedtemplates/Win10.json')]"
             },
             "Bastion": {
-                "Link": "[concat(parameters('filePath'), 'bastion.json', parameters('sasToken'))]"
+                "Link": "[concat(parameters('filePath'), 'nestedtemplates/bastion.json')]"
             }
         }
     },
