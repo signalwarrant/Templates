@@ -2,8 +2,8 @@
 
 ## Prerequisites
 
-1. Upload the CreateADPDC.zip file to a file share in Azure.
-2. Upload the templates in the nestedtemplates folder to a file share in Azure (SVR2012.json, SVR2016.json, SVR2019.json)
+1. Upload the CreateADPDC.zip file to Github.
+2. Upload the templates in the nestedtemplates folder to Github (SVR2012.json, SVR2016.json, SVR2019.json)
 3. Create a Shared Access Signature to access the file share (edit the value of the sasToken parameter).
 4. Provide a value for the domainName parameter.
 5. Provide a value for the filePath parmeter to coorespond to the path of your fileshare created in Step 1.
@@ -11,6 +11,8 @@
 7. If you're deploying to Azure Government you'll need to change the default value of the azurePlatform parameter, otherwise the default is fine for Azure Commercial.
 8. Create a resource group in Azure.
 
+
+## Note: The Automatic Guest OS Patch features does not currently work with smalldisk images. 
 ----------------------------
 
 ## Overview
