@@ -53,23 +53,11 @@
         },
         "dcSKU": {
             "type": "string",
-            "defaultValue": "2019-Datacenter-smalldisk",
+            "defaultValue": "2019-Datacenter",
             "allowedValues": [
                 "2012-R2-Datacenter-smalldisk",
                 "2016-Datacenter-smalldisk",
-                "2019-Datacenter-smalldisk"
-            ],
-            "metadata": {
-                "description": "Operating System of the Domain Controller"
-            }
-        },
-        "dcOS": {
-            "type": "string",
-            "defaultValue": "Server2019",
-            "allowedValues": [
-                "Server2012R2",
-                "Server2016",
-                "Server2019"
+                "2019-Datacenter"
             ],
             "metadata": {
                 "description": "Operating System of the Domain Controller"
@@ -224,7 +212,7 @@
         },
         "adminPassword": {
             "type": "securestring",
-            "defaultValue": "EAglerising!@00",
+            "defaultValue": "",
             "metadata": {
                 "description": "Admin Password for all users"
             }
@@ -423,7 +411,7 @@
             "name": "[parameters('dcName')]",
             "comments":"Deploying the DC1 VM.",
             "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "2019-07-01",
+            "apiVersion": "2020-12-01",
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/networkInterfaces/', variables('vm1NICName'))]",
@@ -442,8 +430,8 @@
                         }
                     },
                     "imageReference": {
-                        "publisher": "[variables('operatingSystemValues')[parameters('dcOS')].PublisherValue]",
-                        "offer": "[variables('operatingSystemValues')[parameters('dcOS')].OfferValue]",
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
                         "sku": "[parameters('dcSKU')]",
                         "version": "latest"
                     }
@@ -466,7 +454,11 @@
                     "adminPassword": "[parameters('adminPassword')]",
                     "windowsConfiguration": {
                         "provisionVMAgent": true,
-                        "enableAutomaticUpdates": true
+                        "enableAutomaticUpdates": true,
+                        "patchSettings": {
+                            "enableHotpatching": false,
+                            "patchMode": "AutomaticByPlatform"
+                        }
                     }
                 },
                 "licenseType": "Windows_Server",
