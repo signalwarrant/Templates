@@ -20,7 +20,7 @@ if ($subs.count -gt 1) {
 }
 
 $resourceGroupLocation = "eastus"
-$resourceGroupName = "DefenderSecLab"
+$resourceGroupName = "SentinalLab"
 $templateFilePath = '.\ADForest-deploy.json'
 
 $resourceGroup = Get-AzResourceGroup -Name $resourceGroupName -ErrorAction SilentlyContinue
@@ -41,4 +41,4 @@ if (!($resourceGroup)) {
 
 # Template Deployment
 #$templateFileName = @(".\ADForest-deploy.json", ".\ADForest-deploy.json") # these are the parameter files
-New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -Name DefenderSecLab -TemplateFile $templateFilePath
+New-AzResourceGroupDeployment -ResourceGroupName $resourceGroupName -Name SentinelLab -TemplateFile $templateFilePath

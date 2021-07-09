@@ -100,7 +100,7 @@
         },
         "svr16Count":{
             "type":"int",
-            "defaultValue": 1,
+            "defaultValue": 0,
             "metadata":{
                 "description": "Number of Windows Server 2016 VMs to deploy"
             }
@@ -135,7 +135,7 @@
         },
         "svr12Count":{
             "type":"int",
-            "defaultValue": 1,
+            "defaultValue": 0,
             "metadata":{
                 "description": "Number of Windows Server 2012 VMs to deploy"
             }
@@ -212,7 +212,7 @@
         },
         "adminPassword": {
             "type": "securestring",
-            "defaultValue": "",
+            "defaultValue": "EAglerising!@00",
             "metadata": {
                 "description": "Admin Password for all users"
             }
@@ -292,23 +292,6 @@
         "nsgName": "[concat(parameters('myLabName'), '-NSG')]",
         "configFile": "CreateADPDC.zip",
         "configVmScriptFile": "[concat(parameters('filePath'), 'DSC/', variables('configFile'))]",
-        "operatingSystemValues": {
-            "Server2012R2": {
-                "PublisherValue": "MicrosoftWindowsServer",
-                "OfferValue": "WindowsServer",
-                "SkuValue": "2012-R2-Datacenter"
-            },
-            "Server2016": {
-                "PublisherValue": "MicrosoftWindowsServer",
-                "OfferValue": "WindowsServer",
-                "SkuValue": "2016-Datacenter"
-            },
-            "Server2019": {
-                "PublisherValue": "MicrosoftWindowsServer",
-                "OfferValue": "WindowsServer",
-                "SkuValue": "2019-DataCenter"
-            }
-        },
         "vm1NICName": "[concat(parameters('dcName'), '-NIC')]",
         "vm1PIPName": "[concat(parameters('dcName'), '-PIP')]",
         "TEMPLATES": {
@@ -347,7 +330,8 @@
             "comments":"The single Network Security group for the entire Lab. All of the VM NICs reference the same NSG, same NSG rules.",
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2019-07-01",
-            "location": "[parameters('location')]"
+            "location": "[parameters('location')]",
+            "properties": {}
         },
         {
             "name": "[variables('labvNetName')]",
@@ -486,6 +470,8 @@
                 "autoUpgradeMinorVersion": true,
                 "settings": {
                     "wmfVersion": "latest",
+                    "modulesUrl": "",
+                    "configurationFunction": "",
                     "configuration": {
                         "url": "[variables('configVmScriptFile')]",
                         "script": "CreateADPDC.ps1",
