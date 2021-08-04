@@ -31,7 +31,7 @@
           }
     },
     "variables": {
-      "storageAccountName": "[concat(parameters('myLabName'), 'dsa')]",
+      "storageAccountName": "[concat(uniqueString(subscription().subscriptionId), 'storage')]",
       "labvNetName": "[concat(parameters('myLabName'), '-vNET')]",
       "nsgName": "[concat(parameters('myLabName'), '-NSG')]",
       "domainJoinOption": 3,
