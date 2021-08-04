@@ -214,7 +214,7 @@
         }
     },
     "variables": {
-        "storageAccountName": "[toLower(concat(parameters('myLabName'), 'dsa'))]",
+        "storageAccountName": "[concat(uniqueString(subscription().subscriptionId), 'storage')]",
         "storageAccountType": "Standard_LRS",
         "storageAccountKind":"StorageV2",
         "subnetName": "Domain",
