@@ -43,9 +43,9 @@
         },
         "dcSize": {
             "type": "string",
-            "defaultValue":"Standard_A2_v2",
+            "defaultValue":"Standard_B2s",
             "allowedValues":[
-                "Standard_A2_v2"
+                "Standard_B2s"
             ],
             "metadata":{
                 "description": "The size of the Domain Controller"   
@@ -79,9 +79,9 @@
         },
         "svr2019Size": {
             "type": "string",
-            "defaultValue":"Standard_A2_v2",
+            "defaultValue":"Standard_B2s",
             "allowedValues":[
-                "Standard_A2_v2"
+                "Standard_B2s"
             ],
             "metadata":{
                 "description": "The size of the Windows Server 2019 VMs"   
@@ -96,76 +96,6 @@
             ],
             "metadata": {
                 "description": "Disk type for each Windows Server 2019 VM"
-            }
-        },
-        "svr16Count":{
-            "type":"int",
-            "defaultValue": 0,
-            "metadata":{
-                "description": "Number of Windows Server 2016 VMs to deploy"
-            }
-        },
-        "svr16Prefix":{
-            "type":"string",
-            "defaultValue":"2016SVR",
-            "metadata":{
-                "description":"Naming Prefix used for the Windows Server 2016 VMs."
-            }
-        },
-        "svr2016Size": {
-            "type": "string",
-            "defaultValue":"Standard_A2_v2",
-            "allowedValues":[
-                "Standard_A2_v2"
-            ],
-            "metadata":{
-                "description": "The size of the Windows Server 2016 VMs"   
-            }
-        },
-        "svr2016OSDiskType": {
-            "type": "string",
-            "defaultValue":"Standard_LRS",
-            "allowedValues":[
-                "Premium_LRS",
-                "Standard_LRS"
-            ],
-            "metadata": {
-                "description": "Disk type for each Windows Server 2016 VM"
-            }
-        },
-        "svr12Count":{
-            "type":"int",
-            "defaultValue": 0,
-            "metadata":{
-                "description": "Number of Windows Server 2012 VMs to deploy"
-            }
-        },
-        "svr12Prefix":{
-            "type":"string",
-            "defaultValue":"2012SVR",
-            "metadata":{
-                "description":"Naming Prefix used for the Windows Server 2012 VMs."
-            }
-        },
-        "svr2012Size": {
-            "type": "string",
-            "defaultValue":"Standard_A2_v2",
-            "allowedValues":[
-                "Standard_A2_v2"
-            ],
-            "metadata":{
-                "description": "The size of the Windows Server 2012 VMs"   
-            }
-        },
-        "svr2012OSDiskType": {
-            "type": "string",
-            "defaultValue":"Standard_LRS",
-            "allowedValues":[
-                "Premium_LRS",
-                "Standard_LRS"
-            ],
-            "metadata": {
-                "description": "Disk type for each Windows Server 2012 VM"
             }
         },
         "WIN10Count":{
@@ -184,9 +114,9 @@
         },
         "WIN10Size": {
             "type": "string",
-            "defaultValue":"Standard_A2_v2",
+            "defaultValue":"Standard_B2s",
             "allowedValues":[
-                "Standard_A2_v2"
+                "Standard_B2s"
             ],
             "metadata":{
                 "description": "The size of the Windows 10 VMs"   
@@ -297,12 +227,6 @@
         "TEMPLATES": {
             "SVR2019": {
                 "Link": "[concat(parameters('filePath'), 'nestedtemplates/SVR2019.json')]"
-            },
-            "SVR2016": {
-                "Link": "[concat(parameters('filePath'), 'nestedtemplates/SVR2016.json')]"
-            },
-            "SVR2012": {
-                "Link": "[concat(parameters('filePath'), 'nestedtemplates/SVR2012.json')]"
             },
             "WIN10": {
                 "Link": "[concat(parameters('filePath'), 'nestedtemplates/Win10.json')]"
@@ -419,11 +343,6 @@
                         "sku": "[parameters('dcSKU')]",
                         "version": "latest"
                     }
-                },
-                "priority": "Spot",
-                "evictionPolicy": "Deallocate",
-                "billingProfile": {
-                    "maxPrice": -1
                 },
                 "networkProfile": {
                     "networkInterfaces": [
@@ -552,94 +471,6 @@
                     },
                     "svr2019OSDiskType": {
                         "value": "[parameters('svr2019OSDiskType')]"
-                    },
-                    "domainName":{
-                        "value":"[parameters('domainName')]"
-                    },
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    },
-                    "azurePlatform": {
-                        "value": "[parameters('azurePlatform')]"
-                    }
-                }
-            },
-                "dependsOn": [
-                    "updateVNet"
-                ]
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "comments":"Deploy Windows Server 2016 VMs if you have chosen to do so.",
-            "name": "SVR2016",
-            "apiVersion": "2019-07-01",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                "uri": "[variables('TEMPLATES')['svr2016'].Link]"
-                },
-                "parameters": {
-                    "myLabName":{
-                        "value":"[parameters('myLabName')]"
-                    },
-                    "SVR16Prefix":{
-                        "value":"[parameters('SVR16Prefix')]"
-                    },
-                    "svr16Count":{
-                        "value": "[parameters('svr16Count')]"
-                    },
-                    "svr2016Size": {
-                        "value": "[parameters('svr2016Size')]"
-                    },
-                    "svr2016OSDiskType": {
-                        "value": "[parameters('svr2016OSDiskType')]"
-                    },
-                    "domainName":{
-                        "value":"[parameters('domainName')]"
-                    },
-                    "adminUsername": {
-                        "value": "[parameters('adminUsername')]"
-                    },
-                    "adminPassword": {
-                        "value": "[parameters('adminPassword')]"
-                    },
-                    "azurePlatform": {
-                        "value": "[parameters('azurePlatform')]"
-                    }
-                }
-            },
-                "dependsOn": [
-                    "updateVNet"
-                ]
-        },
-        {
-            "type": "Microsoft.Resources/deployments",
-            "comments":"Deploy Windows Server 2012 VMs if you have chosen to do so.",
-            "name": "SVR2012",
-            "apiVersion": "2019-07-01",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                "uri": "[variables('TEMPLATES')['svr2012'].Link]"
-                },
-                "parameters": {
-                    "myLabName":{
-                        "value":"[parameters('myLabName')]"
-                    },
-                    "SVR12Prefix":{
-                        "value":"[parameters('SVR12Prefix')]"
-                    },
-                    "svr12Count":{
-                        "value": "[parameters('svr12Count')]"
-                    },
-                    "svr2012Size": {
-                        "value": "[parameters('svr2012Size')]"
-                    },
-                    "svr2012OSDiskType": {
-                        "value": "[parameters('svr2012OSDiskType')]"
                     },
                     "domainName":{
                         "value":"[parameters('domainName')]"
