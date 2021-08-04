@@ -22,7 +22,7 @@
         },
         "filePath":{
             "type":"string",
-            "defaultValue":"https://raw.githubusercontent.com/signalwarrant/ARM-Templates/main/ADForest-SpotInstance/",
+            "defaultValue":"https://raw.githubusercontent.com/signalwarrant/ARM-Templates/main/ADForest/",
             "metadata":{
                 "description": "Path in your storage account where the DSC resources are located."
             }
