@@ -18,8 +18,15 @@
 $pass = '$uper$ecretPass123' | ConvertTo-SecureString -AsPlainText -force
 ```
 
-2. Run the command to kick off the template
+2. Validate the deployment template
 
 ```Powershell
-New-AzResourceGroupDeployment -Name SignalWarrantDomain -ResourceGroupName Signalwarrant-net-Domain -TemplateFile '.\ADForest-deploy.json' -adminUsername 'chief' -adminPassword $pass -Verbose
+$pass = '' | ConvertTo-SecureString -AsPlainText -force
+Test-AzResourceGroupDeployment -ResourceGroupName Signalwarrant-Domain -TemplateFile '.\ADForest-deploy.json' -adminUsername 'chief' -adminPassword $pass -Verbose
+```
+
+3. Run the command to kick off the template
+
+```Powershell
+New-AzResourceGroupDeployment -Name SignalWarrantDomain -ResourceGroupName Signalwarrant-Domain -TemplateFile '.\ADForest-deploy.json' -adminUsername 'chief' -adminPassword $pass -Verbose
 ```

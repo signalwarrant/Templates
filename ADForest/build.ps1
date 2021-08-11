@@ -9,10 +9,13 @@ $sa = 'signalwarrantdomainsa'
 $testSa = Get-AzStorageAccountNameAvailability -Name $sa
 $sku = 'Standard_LRS'
 $kind = 'StorageV2'
-$fileShareName = 'armfiles'
+$containerName = 'armfiles'
 
 # Local Files to upload
 $localFiles = 'C:\scripts\ARM'
+
+# Directories to Create
+$dirs = @("DSC", "nestedtemplates")
 
 # Build the Resource Group 
 if (!$rg) {
@@ -32,23 +35,32 @@ if ($testSa.NameAvailable -eq $true) {
     $newSA = Get-AzStorageAccount -ResourceGroupName $rg.ResourceGroupName -Name $sa
 }
 
-# Check for Fileshare
-$filesShare = Get-AzRmStorageShare -ResourceGroupName $newRG.ResourceGroupName -StorageAccountName $newSA.StorageAccountName 
-# Build the Fileshare in the Storage Account that will house the nested templates files and DSC files
-if (!$filesShare) {
-    # Create a fileshare in the SA to hold the nested templates and the DSC files
-    $share = New-AzRmStorageShare -ResourceGroupName $newRG.ResourceGroupName -StorageAccountName $newSA.StorageAccountName -Name $fileShareName
-    Write-Host -ForegroundColor Green "Fileshare:" $share.Name "created successfully"
+# Check for Blob Container
+$container = Get-AzRmStorageContainer -ResourceGroupName $newRG.ResourceGroupName -StorageAccountName $newSA.StorageAccountName -Name $containerName -ErrorAction SilentlyContinue
+# Build the Container in the Storage Account that will house the nested templates files and DSC files
+if (!$container) {
+    # Create a container in the SA to hold the nested templates and the DSC files
+    $container = New-AzRmStorageContainer -ResourceGroupName $newRG.ResourceGroupName -StorageAccountName $newSA.StorageAccountName -Name $containerName
+    $sasToken = New-AzStorageContainerSASToken -Name "TemplateFiles" -Context $newSA.Context -Permission rl -Protocol HttpsOnly -FullUri
+    Write-Host -ForegroundColor Green "Container:" $container.Name "created successfully"
 } else {
-    Write-Host -ForegroundColor Red "Fileshare:" $filesShare.Name "already exists"
-    $share = Get-AzRmStorageShare -ResourceGroupName $newRG.ResourceGroupName -StorageAccountName $newSA.StorageAccountName  
+    Write-Host -ForegroundColor Red "Container:" $container.Name "already exists"
+    $container = Get-AzRmStorageContainer -ResourceGroupName $newRG.ResourceGroupName -StorageAccountName $newSA.StorageAccountName -Name $containerName
+    $sastoken = New-AzStorageContainerSASToken -Name "TemplateFiles" -Context $newSA.Context -Permission rl -Protocol HttpsOnly -FullUri
 }
 
-# Copy files to the file share
-if ($Share){
-    Set-AzStorageFileContent -Context $newSA.Context -ShareName $share.Name -Source $localFiles -Path $share.name
-} else {
-    Write-Host -ForegroundColor Red "File Share:" $shareName "does NOT exist"
-}
+$sasToken
+<#
+# Make 2 Directories in the Fileshare
+if ($container){
+    # Create storage directories
+    # ---- TODO 
+    # Add another If statement to check for directory existence before running foreach statement. 
+    # ---- TODO 
+    foreach ($dir in $dirs) {
+        $newDir = New-AzStorageDirectory -Context $newSA.Context -ShareName $container.Name -Path $dir 
+        Write-Host -ForegroundColor Green "Directory:" $newDir.Name "created successfully"   
+    }
+} 
 
-# Set-AzStorageFileContent -Context $newSA.Context -ShareName $share.Name -Source $localFiles -Path $share.name
+#>
