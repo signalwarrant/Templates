@@ -22,16 +22,9 @@
         },
         "filePath":{
             "type":"string",
-            "defaultValue":"https://signalwarrantdomainsa.file.core.windows.net/armfiles/",
+            "defaultValue":"https://raw.githubusercontent.com/signalwarrant/ARM-Templates/main/ADForest/",
             "metadata":{
                 "description": "Path in your storage account where the DSC resources are located."
-            }
-        },
-        "sasToken": {
-            "type": "string",
-            "defaultValue": "",
-            "metadata": {
-                "description": "sasToken to allow access to the Blob storage for the DSC files and nested templates"
             }
         },
         "dnsIP":{
@@ -228,18 +221,18 @@
         "labvNetName": "[concat(parameters('myLabName'), '-vNET')]",
         "nsgName": "[concat(parameters('myLabName'), '-NSG')]",
         "configFile": "CreateADPDC.zip",
-        "configVmScriptFile": "[concat(parameters('filePath'), 'DSC/', variables('configFile'), parameters('sasToken'))]",
+        "configVmScriptFile": "[concat(parameters('filePath'), 'DSC/', variables('configFile'))]",
         "vm1NICName": "[concat(parameters('dcName'), '-NIC')]",
         "vm1PIPName": "[concat(parameters('dcName'), '-PIP')]",
         "TEMPLATES": {
             "SVR2019": {
-                "Link": "[concat(parameters('filePath'), 'nestedtemplates/SVR2019.json', parameters('sasToken'))]"
+                "Link": "[concat(parameters('filePath'), 'nestedtemplates/SVR2019.json')]"
             },
             "WIN10": {
-                "Link": "[concat(parameters('filePath'), 'nestedtemplates/Win10.json', parameters('sasToken'))]"
+                "Link": "[concat(parameters('filePath'), 'nestedtemplates/Win10.json')]"
             },
             "Bastion": {
-                "Link": "[concat(parameters('filePath'), 'nestedtemplates/bastion.json', parameters('sasToken'))]"
+                "Link": "[concat(parameters('filePath'), 'nestedtemplates/bastion.json')]"
             }
         }
     },
