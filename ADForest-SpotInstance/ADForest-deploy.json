@@ -20,12 +20,19 @@
                 "description": "FQDN of your domain name e.g. mydomain.com"   
             }
         },
-        "filePath":{
+        "_artifactsLocation":{
             "type":"string",
             "defaultValue":"https://raw.githubusercontent.com/signalwarrant/ARM-Templates/main/ADForest-SpotInstance/",
             "metadata":{
                 "description": "Path in your storage account where the DSC resources are located."
             }
+        },
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Auto-generated token to access _artifactsLocation. Leave it blank unless you need to provide your own value."
+            },
+            "defaultValue": ""
         },
         "dnsIP":{
             "type":"string",
@@ -290,25 +297,23 @@
         "subnetName": "Domain",
         "labvNetName": "[concat(parameters('myLabName'), '-vNET')]",
         "nsgName": "[concat(parameters('myLabName'), '-NSG')]",
-        "configFile": "CreateADPDC.zip",
-        "configVmScriptFile": "[concat(parameters('filePath'), 'DSC/', variables('configFile'))]",
         "vm1NICName": "[concat(parameters('dcName'), '-NIC')]",
         "vm1PIPName": "[concat(parameters('dcName'), '-PIP')]",
         "TEMPLATES": {
             "SVR2019": {
-                "Link": "[concat(parameters('filePath'), 'nestedtemplates/SVR2019.json')]"
+                "Link": "[concat(parameters('_artifactsLocation'), 'nestedtemplates/SVR2019.json')]"
             },
             "SVR2016": {
-                "Link": "[concat(parameters('filePath'), 'nestedtemplates/SVR2016.json')]"
+                "Link": "[concat(parameters('_artifactsLocation'), 'nestedtemplates/SVR2016.json')]"
             },
             "SVR2012": {
-                "Link": "[concat(parameters('filePath'), 'nestedtemplates/SVR2012.json')]"
+                "Link": "[concat(parameters('_artifactsLocation'), 'nestedtemplates/SVR2012.json')]"
             },
             "WIN10": {
-                "Link": "[concat(parameters('filePath'), 'nestedtemplates/Win10.json')]"
+                "Link": "[concat(parameters('_artifactsLocation'), 'nestedtemplates/Win10.json')]"
             },
             "Bastion": {
-                "Link": "[concat(parameters('filePath'), 'nestedtemplates/bastion.json')]"
+                "Link": "[concat(parameters('_artifactsLocation'), 'nestedtemplates/bastion.json')]"
             }
         }
     },
@@ -447,37 +452,31 @@
         },        
         {
             "type": "Microsoft.Compute/virtualMachines/extensions",
-            "comments":"Install Active Directory on DC1.",
-            "name": "[concat(parameters('dcName'), '/CreateADPDC')]",
-            "apiVersion": "2019-07-01",
+            "apiVersion": "2021-03-01",
+            "name": "CreateADForest",
             "location": "[parameters('location')]",
-            "dependsOn":[
+            "dependsOn": [
                 "[resourceId('Microsoft.Compute/virtualMachines/', parameters('dcName'))]"
             ],
             "properties": {
                 "publisher": "Microsoft.Powershell",
                 "type": "DSC",
-                "typeHandlerVersion": "2.77",
+                "typeHandlerVersion": "2.19",
                 "autoUpgradeMinorVersion": true,
                 "settings": {
-                    "wmfVersion": "latest",
-                    "modulesUrl": "",
-                    "configurationFunction": "",
-                    "configuration": {
-                        "url": "[variables('configVmScriptFile')]",
-                        "script": "CreateADPDC.ps1",
-                        "function": "CreateADPDC"
-                    },
-                    "configurationArguments": {
-                        "domainName": "[parameters('domainName')]"
-                    } 
+                    "ModulesUrl": "[uri(parameters('_artifactsLocation'), concat('DSC/CreateADPDC.zip', parameters('_artifactsLocationSasToken')))]",
+                    "ConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
+                    "Properties": {
+                        "DomainName": "[parameters('domainName')]",
+                        "AdminCreds": {
+                            "UserName": "[parameters('adminUsername')]",
+                            "Password": "PrivateSettingsRef:AdminPassword"
+                        }
+                    }
                 },
                 "protectedSettings": {
-                    "configurationArguments": {
-                        "AdminCreds": {
-                            "userName": "[parameters('adminUsername')]",
-                            "password": "[parameters('adminPassword')]"
-                        }
+                    "Items": {
+                        "AdminPassword": "[parameters('adminPassword')]"
                     }
                 }
             }
