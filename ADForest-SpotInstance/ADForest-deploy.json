@@ -4,7 +4,7 @@
     "parameters": {
         "myLabName":{
             "type":"string",
-            "defaultValue": "SecurityLab",
+            "defaultValue": "securitylab",
             "metadata":{
                 "description": "Must be lower-case letters only because it's used in the storage account name"
             }
@@ -284,7 +284,7 @@
         }
     },
     "variables": {
-        "storageAccountName": "[toLower(concat(parameters('myLabName'), 'dsa'))]",
+        "storageAccountName": "[concat('storage', uniqueString(resourceGroup().id))]",
         "storageAccountType": "Standard_LRS",
         "storageAccountKind":"StorageV2",
         "subnetName": "Domain",
