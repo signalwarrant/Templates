@@ -28,10 +28,12 @@
         },
         "azurePlatform":{
             "type":"string"
+        },
+        "saName": {
+            "type": "string"
         }
   },
   "variables": {
-      "storageAccountName": "[concat(parameters('myLabName'), 'dsa')]",
       "labvNetName": "[concat(parameters('myLabName'), '-vNET')]",
       "nsgName": "[concat(parameters('myLabName'), '-NSG')]",
       "domainJoinOption": 3,
@@ -131,7 +133,7 @@
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
                         "enabled": true,
-                        "storageUri": "[concat('https://', variables('storageAccountName'), parameters('azurePlatform'))]"
+                        "storageUri": "[concat('https://', parameters('saName'), parameters('azurePlatform'))]"
                     }
                 }
       }

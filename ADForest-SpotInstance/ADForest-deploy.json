@@ -555,6 +555,9 @@
                     },
                     "azurePlatform": {
                         "value": "[parameters('azurePlatform')]"
+                    },
+                    "saName": {
+                        "value": "[variables('storageAccountName')]"
                     }
                 }
             },
@@ -599,6 +602,9 @@
                     },
                     "azurePlatform": {
                         "value": "[parameters('azurePlatform')]"
+                    },
+                    "saName": {
+                        "value": "[variables('storageAccountName')]"
                     }
                 }
             },
@@ -643,6 +649,9 @@
                     },
                     "azurePlatform": {
                         "value": "[parameters('azurePlatform')]"
+                    },
+                    "saName": {
+                        "value": "[variables('storageAccountName')]"
                     }
                 }
             },
@@ -687,6 +696,9 @@
                     },
                     "azurePlatform": {
                         "value": "[parameters('azurePlatform')]"
+                    },
+                    "saName": {
+                        "value": "[variables('storageAccountName')]"
                     }
                 }
             },
