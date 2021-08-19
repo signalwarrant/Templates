@@ -53,11 +53,11 @@
         },
         "dcSKU": {
             "type": "string",
-            "defaultValue": "2019-Datacenter",
+            "defaultValue": "2019-Datacenter-smalldisk",
             "allowedValues": [
                 "2012-R2-Datacenter-smalldisk",
                 "2016-Datacenter-smalldisk",
-                "2019-Datacenter"
+                "2019-Datacenter-smalldisk"
             ],
             "metadata": {
                 "description": "Operating System of the Domain Controller"
@@ -419,11 +419,6 @@
                         "sku": "[parameters('dcSKU')]",
                         "version": "latest"
                     }
-                },
-                "priority": "Spot",
-                "evictionPolicy": "Deallocate",
-                "billingProfile": {
-                    "maxPrice": -1
                 },
                 "networkProfile": {
                     "networkInterfaces": [
