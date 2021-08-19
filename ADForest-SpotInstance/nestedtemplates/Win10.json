@@ -120,11 +120,6 @@
                   "version": "latest"
               }
           },
-            "priority": "Spot",
-                "evictionPolicy": "Deallocate",
-                "billingProfile": {
-                    "maxPrice": -1
-                },
           "networkProfile": {
               "networkInterfaces": [
                   {
