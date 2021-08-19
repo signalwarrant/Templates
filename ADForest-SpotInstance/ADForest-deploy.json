@@ -433,11 +433,7 @@
                     "adminPassword": "[parameters('adminPassword')]",
                     "windowsConfiguration": {
                         "provisionVMAgent": true,
-                        "enableAutomaticUpdates": true,
-                        "patchSettings": {
-                            "enableHotpatching": false,
-                            "patchMode": "AutomaticByPlatform"
-                        }
+                        "enableAutomaticUpdates": true
                     }
                 },
                 "licenseType": "Windows_Server",
