@@ -65,7 +65,7 @@
         },
         "svr19Count":{
             "type":"int",
-            "defaultValue": 1,
+            "defaultValue": 0,
             "metadata":{
                 "description": "Number of Windows Server 2019 VMs to deploy"
             }
