@@ -43,9 +43,9 @@
         },
         "dcSize": {
             "type": "string",
-            "defaultValue":"Standard_A2_v2",
+            "defaultValue":"Standard_B2s",
             "allowedValues":[
-                "Standard_A2_v2"
+                "Standard_B2s"
             ],
             "metadata":{
                 "description": "The size of the Domain Controller"   
@@ -79,9 +79,9 @@
         },
         "svr2019Size": {
             "type": "string",
-            "defaultValue":"Standard_A2_v2",
+            "defaultValue":"Standard_B2s",
             "allowedValues":[
-                "Standard_A2_v2"
+                "Standard_B2s"
             ],
             "metadata":{
                 "description": "The size of the Windows Server 2019 VMs"   
@@ -114,9 +114,9 @@
         },
         "svr2016Size": {
             "type": "string",
-            "defaultValue":"Standard_A2_v2",
+            "defaultValue":"Standard_B2s",
             "allowedValues":[
-                "Standard_A2_v2"
+                "Standard_B2s"
             ],
             "metadata":{
                 "description": "The size of the Windows Server 2016 VMs"   
@@ -149,9 +149,9 @@
         },
         "svr2012Size": {
             "type": "string",
-            "defaultValue":"Standard_A2_v2",
+            "defaultValue":"Standard_B2s",
             "allowedValues":[
-                "Standard_A2_v2"
+                "Standard_B2s"
             ],
             "metadata":{
                 "description": "The size of the Windows Server 2012 VMs"   
@@ -184,9 +184,9 @@
         },
         "WIN10Size": {
             "type": "string",
-            "defaultValue":"Standard_A2_v2",
+            "defaultValue":"Standard_B2s",
             "allowedValues":[
-                "Standard_A2_v2"
+                "Standard_B2s"
             ],
             "metadata":{
                 "description": "The size of the Windows 10 VMs"   
