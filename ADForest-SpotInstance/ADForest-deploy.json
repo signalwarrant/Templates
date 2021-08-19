@@ -733,7 +733,7 @@
                     "updateVNet"
                 ]
         }
-    ]
+    ],
     "outputs": {
         "adminUsername": {
             "type": "string",
