@@ -401,7 +401,8 @@
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2021-04-01",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIpAddresses/', variables('vm1PIPName'))]"
+                "[resourceId('Microsoft.Network/networkInterfaces/', variables('vm1NICName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
             ],
             "properties": {
                 "mode": "Incremental"
@@ -413,8 +414,7 @@
                     "name": "[parameters('dcName')]",
                     "location": "[parameters('location')]",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Network/networkInterfaces/', variables('vm1NICName'))]",
-                        "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
+                        "[resourceId('Microsoft.Resources/deployments/', 'deployment1')]"
                     ],
                     "properties": {
                         "hardwareProfile": {
