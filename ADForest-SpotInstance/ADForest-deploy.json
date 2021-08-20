@@ -448,9 +448,6 @@
                     "apiVersion": "2021-03-01",
                     "name": "CreateADForest",
                     "location": "[parameters('location')]",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Compute/virtualMachines/', parameters('dcName'))]"
-                    ],
                     "properties": {
                         "publisher": "Microsoft.Powershell",
                         "type": "DSC",
