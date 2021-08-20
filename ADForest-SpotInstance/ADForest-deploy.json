@@ -396,80 +396,93 @@
                 "name": "Basic"
             }
         },
-        {     
-            "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "2021-03-01",
-            "name": "[parameters('dcName')]",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[resourceId('Microsoft.Network/networkInterfaces/', variables('vm1NICName'))]",
-                "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
-            ],
+        {
+            "name": "Deployment1",
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
             "properties": {
-                "hardwareProfile": {
-                    "vmSize": "[parameters('dcSize')]"
-                },
-                "osProfile": {
-                    "computerName": "[parameters('dcName')]",
-                    "adminUsername": "[parameters('adminUsername')]",
-                    "adminPassword": "[parameters('adminPassword')]",
-                    "windowsConfiguration": {
-                        "provisionVMAgent": true,
-                        "enableAutomaticUpdates": true
-                    }
-                },
-                "storageProfile": {
-                    "imageReference": {
-                        "publisher": "MicrosoftWindowsServer",
-                        "offer": "WindowsServer",
-                        "sku": "2019-Datacenter-smalldisk",
-                        "version": "latest"
-                    },
-                    "osDisk": {
-                        "name": "[concat(parameters('dcName'), 'sys')]",
-                        "caching": "ReadOnly",
-                        "createOption": "FromImage",
-                        "managedDisk": {
-                            "storageAccountType": "[parameters('osDiskType')]"
-                        }
-                    }
-                },
-                "networkProfile": {
-                    "networkInterfaces": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('vm1NICName'))]"
-                        }
-                    ]
-                }
+                "mode": "Incremental"
             },
             "resources": [
-                {
-                    "type": "extensions",
+                {     
+                    "type": "Microsoft.Compute/virtualMachines",
                     "apiVersion": "2021-03-01",
-                    "name": "CreateADForest",
+                    "name": "[parameters('dcName')]",
                     "location": "[parameters('location')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Network/networkInterfaces/', variables('vm1NICName'))]",
+                        "[resourceId('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]"
+                    ],
                     "properties": {
-                        "publisher": "Microsoft.Powershell",
-                        "type": "DSC",
-                        "typeHandlerVersion": "2.19",
-                        "autoUpgradeMinorVersion": true,
-                        "settings": {
-                            "ModulesUrl": "[uri(parameters('_artifactsLocation'), concat('DSC/CreateADPDC.zip', parameters('_artifactsLocationSasToken')))]",
-                            "ConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
-                            "Properties": {
-                                "DomainName": "[parameters('domainName')]",
-                                "AdminCreds": {
-                                    "UserName": "[parameters('adminUsername')]",
-                                    "Password": "PrivateSettingsRef:AdminPassword"
+                        "hardwareProfile": {
+                            "vmSize": "[parameters('dcSize')]"
+                        },
+                        "osProfile": {
+                            "computerName": "[parameters('dcName')]",
+                            "adminUsername": "[parameters('adminUsername')]",
+                            "adminPassword": "[parameters('adminPassword')]",
+                            "windowsConfiguration": {
+                                "provisionVMAgent": true,
+                                "enableAutomaticUpdates": true
+                            }
+                        },
+                        "storageProfile": {
+                            "imageReference": {
+                                "publisher": "MicrosoftWindowsServer",
+                                "offer": "WindowsServer",
+                                "sku": "2019-Datacenter-smalldisk",
+                                "version": "latest"
+                            },
+                            "osDisk": {
+                                "name": "[concat(parameters('dcName'), 'sys')]",
+                                "caching": "ReadOnly",
+                                "createOption": "FromImage",
+                                "managedDisk": {
+                                    "storageAccountType": "[parameters('osDiskType')]"
                                 }
                             }
                         },
-                        "protectedSettings": {
-                            "Items": {
-                                "AdminPassword": "[parameters('adminPassword')]"
+                        "networkProfile": {
+                            "networkInterfaces": [
+                                {
+                                    "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('vm1NICName'))]"
+                                }
+                            ]
+                        }
+                    },
+                    "resources": [
+                        {
+                            "type": "extensions",
+                            "apiVersion": "2021-03-01",
+                            "name": "CreateADForest",
+                            "location": "[parameters('location')]",
+                            "dependsOn": [
+                                "[resourceId('Microsoft.Compute/virtualMachines/', parameters('dcName'))]"
+                            ],
+                            "properties": {
+                                "publisher": "Microsoft.Powershell",
+                                "type": "DSC",
+                                "typeHandlerVersion": "2.19",
+                                "autoUpgradeMinorVersion": true,
+                                "settings": {
+                                    "ModulesUrl": "[uri(parameters('_artifactsLocation'), concat('DSC/CreateADPDC.zip', parameters('_artifactsLocationSasToken')))]",
+                                    "ConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
+                                    "Properties": {
+                                        "DomainName": "[parameters('domainName')]",
+                                        "AdminCreds": {
+                                            "UserName": "[parameters('adminUsername')]",
+                                            "Password": "PrivateSettingsRef:AdminPassword"
+                                        }
+                                    }
+                                },
+                                "protectedSettings": {
+                                    "Items": {
+                                        "AdminPassword": "[parameters('adminPassword')]"
+                                    }
+                                }
                             }
                         }
-                    }
+                    ]
                 }
             ]
         },
