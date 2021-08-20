@@ -396,11 +396,10 @@
                 "name": "Basic"
             }
         },
-        {
-            "name": "[parameters('dcName')]",
-            "comments":"Deploying the DC1 VM.",
+        {     
             "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "2020-12-01",
+            "apiVersion": "2021-03-01",
+            "name": "[parameters('dcName')]",
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/networkInterfaces/', variables('vm1NICName'))]",
@@ -409,28 +408,6 @@
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "[parameters('dcSize')]"
-                },
-                "storageProfile": {
-                    "osDisk": {
-                        "createOption": "fromImage",
-                        "name":"[concat(parameters('dcName'), 'sys')]",
-                        "managedDisk": {
-                            "storageAccountType": "[parameters('osDiskType')]"
-                        }
-                    },
-                    "imageReference": {
-                        "publisher": "MicrosoftWindowsServer",
-                        "offer": "WindowsServer",
-                        "sku": "[parameters('dcSKU')]",
-                        "version": "latest"
-                    }
-                },
-                "networkProfile": {
-                    "networkInterfaces": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('vm1NICName'))]"
-                        }
-                    ]
                 },
                 "osProfile": {
                     "computerName": "[parameters('dcName')]",
@@ -441,22 +418,38 @@
                         "enableAutomaticUpdates": true
                     }
                 },
-                "licenseType": "Windows_Server",
-                "diagnosticsProfile": {
-                    "bootDiagnostics": {
-                        "enabled": true,
-                        "storageUri": "[concat('https://', variables('storageAccountName'), parameters('azurePlatform'))]"
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2019-Datacenter-smalldisk",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "name": "[concat(parameters('dcName'), 'sys')]",
+                        "caching": "ReadOnly",
+                        "createOption": "FromImage",
+                        "managedDisk": {
+                            "storageAccountType": "[parameters('osDiskType')]"
+                        }
                     }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('vm1NICName'))]"
+                        }
+                    ]
                 }
             },
             "resources": [
                 {
                     "type": "extensions",
-                    "apiVersion": "2021-03-01",
+                    "apiVersion": "2020-12-01",
                     "name": "CreateADForest",
                     "location": "[parameters('location')]",
                     "dependsOn": [
-                         "[resourceId('Microsoft.Compute/virtualMachines/', parameters('dcName'))]"
+                        "[resourceId('Microsoft.Compute/virtualMachines/', parameters('dcName'))]"
                     ],
                     "properties": {
                         "publisher": "Microsoft.Powershell",
