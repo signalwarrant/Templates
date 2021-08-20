@@ -322,7 +322,7 @@
             "name": "[variables('storageAccountName')]",
             "comments":"The single storage account for the entire Lab. Everything is built referencing this storage account.",
             "type": "Microsoft.Storage/storageAccounts",
-            "apiVersion": "2019-06-01",
+            "apiVersion": "2021-04-01",
             "location": "[parameters('location')]",
             "properties": {},
             "kind": "[variables('StorageAccountKind')]",
@@ -334,7 +334,7 @@
             "name": "[variables('nsgName')]",
             "comments":"The single Network Security group for the entire Lab. All of the VM NICs reference the same NSG, same NSG rules.",
             "type": "Microsoft.Network/networkSecurityGroups",
-            "apiVersion": "2019-07-01",
+            "apiVersion": "2020-11-01",
             "location": "[parameters('location')]",
             "properties": {}
         },
@@ -342,7 +342,7 @@
             "name": "[variables('labvNetName')]",
             "comments":"The single vNET for the entire LAB.",
             "type": "Microsoft.Network/virtualNetworks",
-            "apiVersion": "2019-09-01",
+            "apiVersion": "2020-11-01",
             "location": "[parameters('location')]",
             "properties": {
                 "addressSpace": {
@@ -355,7 +355,7 @@
             "name": "[variables('vm1NICName')]",
             "comments":"The NIC for DC1, the root DC in the forest.",
             "type": "Microsoft.Network/networkInterfaces",
-            "apiVersion": "2019-07-01",
+            "apiVersion": "2020-11-01",
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[resourceId('Microsoft.Network/networkSecurityGroups/', variables('nsgName'))]",
@@ -387,7 +387,7 @@
             "name": "[variables('vm1PIPName')]",
             "comments":"The Public IP Address for DC1, the root DC in the forest.",
             "type": "Microsoft.Network/publicIpAddresses",
-            "apiVersion": "2019-07-01",
+            "apiVersion": "2020-11-01",
             "location": "[parameters('location')]",
             "properties": {
                 "publicIpAllocationMethod": "Dynamic"
@@ -445,7 +445,7 @@
             "resources": [
                 {
                     "type": "extensions",
-                    "apiVersion": "2020-12-01",
+                    "apiVersion": "2021-03-01",
                     "name": "CreateADForest",
                     "location": "[parameters('location')]",
                     "dependsOn": [
@@ -479,7 +479,7 @@
         {
             "type":"Microsoft.Resources/deployments",
             "comments":"Update the DNS Server of the Virtual Network with the IP of DC1. Because we've only deployed 1 VM at this point it will always get the .4 local IP address of the subnet you listed in the addressPrefixes parameter above.",
-            "apiVersion":"2019-10-01",
+            "apiVersion": "2021-04-01",
             "name":"updateVNet",
             "dependsOn":[
                 "[resourceId('Microsoft.Network/virtualNetworks/', variables('labvNetName'))]",
@@ -494,7 +494,7 @@
                         {
                             "name": "[variables('labvNetName')]",
                             "type": "Microsoft.Network/virtualNetworks",
-                            "apiVersion": "2019-09-01",
+                            "apiVersion": "2020-11-01",
                             "location": "[parameters('location')]",
                             "properties": {
                                 "dhcpOptions":{
@@ -516,7 +516,7 @@
             "type": "Microsoft.Resources/deployments",
             "comments":"Deploy Windows Server 2019 VMs if you have chosen to do so.",
             "name": "SVR2019",
-            "apiVersion": "2019-07-01",
+            "apiVersion": "2021-04-01",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -563,7 +563,7 @@
             "type": "Microsoft.Resources/deployments",
             "comments":"Deploy Windows Server 2016 VMs if you have chosen to do so.",
             "name": "SVR2016",
-            "apiVersion": "2019-07-01",
+            "apiVersion": "2021-04-01",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -610,7 +610,7 @@
             "type": "Microsoft.Resources/deployments",
             "comments":"Deploy Windows Server 2012 VMs if you have chosen to do so.",
             "name": "SVR2012",
-            "apiVersion": "2019-07-01",
+            "apiVersion": "2021-04-01",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -657,7 +657,7 @@
             "type": "Microsoft.Resources/deployments",
             "comments":"Deploy Windows 10 Enterprise VMs if you have chosen to do so.",
             "name": "WIN10",
-            "apiVersion": "2019-07-01",
+            "apiVersion": "2021-04-01",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
@@ -704,7 +704,7 @@
             "type": "Microsoft.Resources/deployments",
             "comments":"Deploy Bastion Host",
             "name": "bastion",
-            "apiVersion": "2019-07-01",
+            "apiVersion": "2021-04-01",
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
