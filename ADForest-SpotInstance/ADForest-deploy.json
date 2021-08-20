@@ -400,6 +400,9 @@
             "name": "Deployment1",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2021-04-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIpAddresses/', variables('vm1PIPName'))]"
+            ],
             "properties": {
                 "mode": "Incremental"
             },
