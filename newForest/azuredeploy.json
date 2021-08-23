@@ -124,7 +124,7 @@
                 "description": "Bastion Hostname for this vNet"
             }
         },
-        "bastion-subnet-ip-prefix": {
+        "bastionSubnet": {
             "type": "string",
             "defaultValue": "10.0.2.0/24",
             "metadata": {
@@ -351,7 +351,7 @@
                         "value": "[parameters('virtualNetworkName')]"
                     },
                     "bastion-subnet-ip-prefix": {
-                        "value": "[parameters('bastion-subnet-ip-prefix')]"
+                        "value": "[parameters('bastionSubnet')]"
                     },
                     "bastionHostname": {
                         "value": "[parameters('bastionHostname')]"
