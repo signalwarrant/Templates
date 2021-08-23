@@ -454,40 +454,7 @@
                                         }
                                     ]
                                 }
-                            },
-                            "resources": [
-                                {
-                                    "type": "extensions",
-                                    "apiVersion": "2021-03-01",
-                                    "name": "CreateADForest",
-                                    "location": "[parameters('location')]",
-                                    "dependsOn": [
-                                        "[resourceId('Microsoft.Compute/virtualMachines/', parameters('dcName'))]"
-                                    ],
-                                    "properties": {
-                                        "publisher": "Microsoft.Powershell",
-                                        "type": "DSC",
-                                        "typeHandlerVersion": "2.19",
-                                        "autoUpgradeMinorVersion": true,
-                                        "settings": {
-                                            "ModulesUrl": "[uri(parameters('_artifactsLocation'), concat('DSC/CreateADPDC.zip', parameters('_artifactsLocationSasToken')))]",
-                                            "ConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
-                                            "Properties": {
-                                                "DomainName": "[parameters('domainName')]",
-                                                "AdminCreds": {
-                                                    "UserName": "[parameters('adminUsername')]",
-                                                    "Password": "PrivateSettingsRef:AdminPassword"
-                                                }
-                                            }
-                                        },
-                                        "protectedSettings": {
-                                            "Items": {
-                                                "AdminPassword": "[parameters('adminPassword')]"
-                                            }
-                                        }
-                                    }
-                                }
-                            ]
+                            }
                         }
                     ]
                 }
