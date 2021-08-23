@@ -367,6 +367,50 @@
                     }
                 }
             }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "comments":"Deploy Windows 10 Enterprise VMs if you have chosen to do so.",
+            "name": "WIN10",
+            "apiVersion": "2021-04-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'UpdateVNetDNS')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                "uri": "[variables('TEMPLATES')['Win10'].Link]"
+                },
+                "parameters": {
+                    "myLabName":{
+                        "value":"[parameters('myLabName')]"
+                    },
+                    "WIN10Prefix":{
+                        "value":"[parameters('WIN10Prefix')]"
+                    },
+                    "WIN10Count":{
+                        "value": "[parameters('WIN10Count')]"
+                    },
+                    "WIN10Size": {
+                        "value": "[parameters('WIN10Size')]"
+                    },
+                    "WIN10OSDiskType": {
+                        "value": "[parameters('WIN10OSDiskType')]"
+                    },
+                    "domainName":{
+                        "value":"[parameters('domainName')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "azurePlatform": {
+                        "value": "[parameters('azurePlatform')]"
+                    }
+                }
+            }
         }
     ]
 }
