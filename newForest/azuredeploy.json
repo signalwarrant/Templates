@@ -190,6 +190,9 @@
                     },
                     "location": {
                         "value": "[parameters('location')]"
+                    },
+                    "bastionSubnet": {
+                        "value": "[parameters('bastionSubnet')]"
                     }
                 }
             }
