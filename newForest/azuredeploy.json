@@ -116,6 +116,27 @@
             "metadata": {
                 "description": "Availability set name."
             }
+        },
+        "bastionHostname": {
+            "type": "string",
+            "defaultValue": "bHost",
+            "metadata": {
+                "description": "Bastion Hostname for this vNet"
+            }
+        },
+        "bastion-subnet-ip-prefix": {
+            "type": "string",
+            "defaultValue": "10.0.1.0/24",
+            "metadata": {
+                "description": "Bastion subnet IP prefix MUST be within vnet IP prefix address space"
+            }
+        }
+    },
+    "variables": {
+        "TEMPLATES": {
+            "Bastion": {
+                "Link": "[concat(parameters('_artifactsLocation'), 'nestedtemplates/bastion.json')]"
+            }
         }
     },
     "resources": [
@@ -221,7 +242,7 @@
                     "imageReference": {
                         "publisher": "MicrosoftWindowsServer",
                         "offer": "WindowsServer",
-                        "sku": "2016-Datacenter",
+                        "sku": "2019-Datacenter-smalldisk",
                         "version": "latest"
                     },
                     "osDisk": {
@@ -229,7 +250,7 @@
                         "caching": "ReadOnly",
                         "createOption": "FromImage",
                         "managedDisk": {
-                            "storageAccountType": "StandardSSD_LRS"
+                            "storageAccountType": "Standard_LRS"
                         }
                     }
                 },
@@ -308,6 +329,32 @@
                     },
                     "location": {
                         "value": "[parameters('location')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "comments":"Deploy Bastion Host",
+            "name": "bastion",
+            "apiVersion": "2021-04-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualMachineName')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                "uri": "[variables('TEMPLATES')['bastion'].Link]"
+                },
+                "parameters": {
+                    "bastion-vnet-name": {
+                        "value": "[parameters('virtualNetworkName')]"
+                    },
+                    "bastion-subnet-ip-prefix": {
+                        "value": "[parameters('bastion-subnet-ip-prefix')]"
+                    },
+                    "bastionHostname": {
+                        "value": "[parameters('bastionHostname')]"
                     }
                 }
             }
