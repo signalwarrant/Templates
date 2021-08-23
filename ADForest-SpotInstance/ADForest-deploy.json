@@ -34,13 +34,6 @@
                 "description": "Auto-generated token to access _artifactsLocation. Leave it blank unless you need to provide your own value."
             }
         },
-        "dscPackage": {
-            "type": "string",
-            "defaultValue": "https://github.com/signalwarrant/ARM-Templates/raw/main/ADForest-SpotInstance/DSC/CreateADPDC.zip",
-            "metadata": {
-                "description": "Github link for zip download od the DSC package"
-            }
-        },
         "dnsIP":{
             "type":"string",
             "defaultValue": "10.0.0.4",
@@ -474,7 +467,7 @@
                                         "typeHandlerVersion": "2.19",
                                         "autoUpgradeMinorVersion": true,
                                         "settings": {
-                                            "ModulesUrl": "[uri(parameters('dscPackage'), parameters('_artifactsLocationSasToken'))]",
+                                            "ModulesUrl": "[uri(parameters('_artifactsLocation'), concat('DSC/CreateADPDC.zip', parameters('_artifactsLocationSasToken')))]",
                                             "ConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
                                             "Properties": {
                                                 "DomainName": "[parameters('domainName')]",
