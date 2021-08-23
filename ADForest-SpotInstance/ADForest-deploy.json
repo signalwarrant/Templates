@@ -29,10 +29,17 @@
         },
         "_artifactsLocationSasToken": {
             "type": "securestring",
+            "defaultValue": "",
             "metadata": {
                 "description": "Auto-generated token to access _artifactsLocation. Leave it blank unless you need to provide your own value."
-            },
-            "defaultValue": ""
+            }
+        },
+        "dscPackage": {
+            "type": "string",
+            "defaultValue": "https://github.com/signalwarrant/ARM-Templates/raw/main/ADForest-SpotInstance/DSC/CreateADPDC.zip",
+            "metadata": {
+                "description": "Github link for zip download od the DSC package"
+            }
         },
         "dnsIP":{
             "type":"string",
@@ -397,7 +404,7 @@
             }
         },
         {
-            "name": "Deployment1",
+            "name": "ADForest",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2021-04-01",
             "dependsOn": [
@@ -415,9 +422,6 @@
                             "apiVersion": "2021-03-01",
                             "name": "[parameters('dcName')]",
                             "location": "[parameters('location')]",
-                            "dependsOn": [
-                                "[resourceId('Microsoft.Resources/deployments/', 'deployment1')]"
-                            ],
                             "properties": {
                                 "hardwareProfile": {
                                     "vmSize": "[parameters('dcSize')]"
@@ -435,7 +439,7 @@
                                     "imageReference": {
                                         "publisher": "MicrosoftWindowsServer",
                                         "offer": "WindowsServer",
-                                        "sku": "2019-Datacenter-smalldisk",
+                                        "sku": "[parameters('dcSKU')]",
                                         "version": "latest"
                                     },
                                     "osDisk": {
@@ -454,7 +458,40 @@
                                         }
                                     ]
                                 }
-                            }
+                            },
+                            "resources": [
+                                {
+                                    "type": "extensions",
+                                    "apiVersion": "2021-03-01",
+                                    "name": "CreateADForest",
+                                    "location": "[parameters('location')]",
+                                    "dependsOn": [
+                                        "[resourceId('Microsoft.Compute/virtualMachines/', parameters('dcName'))]"
+                                    ],
+                                    "properties": {
+                                        "publisher": "Microsoft.Powershell",
+                                        "type": "DSC",
+                                        "typeHandlerVersion": "2.19",
+                                        "autoUpgradeMinorVersion": true,
+                                        "settings": {
+                                            "ModulesUrl": "[uri(parameters('dscPackage'), parameters('_artifactsLocationSasToken'))]",
+                                            "ConfigurationFunction": "CreateADPDC.ps1\\CreateADPDC",
+                                            "Properties": {
+                                                "DomainName": "[parameters('domainName')]",
+                                                "AdminCreds": {
+                                                    "UserName": "[parameters('adminUsername')]",
+                                                    "Password": "PrivateSettingsRef:AdminPassword"
+                                                }
+                                            }
+                                        },
+                                        "protectedSettings": {
+                                            "Items": {
+                                                "AdminPassword": "[parameters('adminPassword')]"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     ]
                 }
@@ -466,8 +503,7 @@
             "apiVersion": "2021-04-01",
             "name":"updateVNet",
             "dependsOn":[
-                "[resourceId('Microsoft.Network/virtualNetworks/', variables('labvNetName'))]",
-                "[concat('Microsoft.Compute/virtualMachines/', parameters('dcName'), '/extensions/CreateADPDC')]"
+                "[resourceId('Microsoft.Network/virtualNetworks/', variables('labvNetName'))]"
             ],
             "properties":{
                 "mode":"Incremental",
@@ -501,6 +537,9 @@
             "comments":"Deploy Windows Server 2019 VMs if you have chosen to do so.",
             "name": "SVR2019",
             "apiVersion": "2021-04-01",
+            "dependsOn":[
+                "[resourceId('Microsoft.Resources/deployments', 'ADForest')]"
+            ],
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
