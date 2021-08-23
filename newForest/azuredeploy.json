@@ -353,7 +353,7 @@
                     "bastion-vnet-name": {
                         "value": "[parameters('virtualNetworkName')]"
                     },
-                    "bastion-subnet-ip-prefix": {
+                    "bastionSubnet": {
                         "value": "[parameters('bastionSubnet')]"
                     },
                     "bastionHostname": {
