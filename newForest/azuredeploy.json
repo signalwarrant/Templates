@@ -28,7 +28,7 @@
         },
         "vmSize": {
             "type": "string",
-            "defaultValue": "Standard_D2s_v3",
+            "defaultValue": "Standard_B2s",
             "metadata": {
                 "description": "Size of the VM for the controller"
             }
@@ -56,14 +56,14 @@
         },
         "virtualMachineName": {
             "type": "string",
-            "defaultValue": "adVM",
+            "defaultValue": "DC",
             "metadata": {
                 "description": "Virtual machine name."
             }
         },
         "virtualNetworkName": {
             "type": "string",
-            "defaultValue": "adVNET",
+            "defaultValue": "labVNET",
             "metadata": {
                 "description": "Virtual network name."
             }
@@ -77,7 +77,7 @@
         },
         "networkInterfaceName": {
             "type": "string",
-            "defaultValue": "adNic",
+            "defaultValue": "labNIC",
             "metadata": {
                 "description": "Network interface name."
             }
@@ -91,28 +91,28 @@
         },
         "subnetName": {
             "type": "string",
-            "defaultValue": "adSubnet",
+            "defaultValue": "labSubnet",
             "metadata": {
                 "description": "Subnet name."
             }
         },
         "subnetRange": {
             "type": "string",
-            "defaultValue": "10.0.0.0/24",
+            "defaultValue": "10.0.1.0/24",
             "metadata": {
                 "description": "Subnet IP range."
             }
         },
         "publicIPAddressName": {
             "type": "string",
-            "defaultValue": "adPublicIP",
+            "defaultValue": "labPIP",
             "metadata": {
                 "description": "Subnet IP range."
             }
         },
         "availabilitySetName": {
             "type": "string",
-            "defaultValue": "adAvailabiltySet",
+            "defaultValue": "labAvailabiltySet",
             "metadata": {
                 "description": "Availability set name."
             }
@@ -126,7 +126,7 @@
         },
         "bastion-subnet-ip-prefix": {
             "type": "string",
-            "defaultValue": "10.0.1.0/24",
+            "defaultValue": "10.0.2.0/24",
             "metadata": {
                 "description": "Bastion subnet IP prefix MUST be within vnet IP prefix address space"
             }
@@ -242,7 +242,7 @@
                     "imageReference": {
                         "publisher": "MicrosoftWindowsServer",
                         "offer": "WindowsServer",
-                        "sku": "2019-Datacenter-smalldisk",
+                        "sku": "2022-Datacenter-smalldisk",
                         "version": "latest"
                     },
                     "osDisk": {
