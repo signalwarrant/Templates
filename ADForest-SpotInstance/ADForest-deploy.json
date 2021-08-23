@@ -570,10 +570,7 @@
                         "value": "[variables('storageAccountName')]"
                     }
                 }
-            },
-                "dependsOn": [
-                    "updateVNet"
-                ]
+            }
         },
         {
             "type": "Microsoft.Resources/deployments",
