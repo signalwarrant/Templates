@@ -31,6 +31,12 @@
       "metadata": {
         "description": "Location for all resources."
       }
+    },
+    "bastionSubnet": {
+      "type": "string",
+      "metadata": {
+        "description": "Subnet prefix for Bastion Host subnet"
+      }
     }
   },
   "resources": [
@@ -51,7 +57,14 @@
             "properties": {
               "addressPrefix": "[parameters('subnetRange')]"
             }
+          },
+          {
+            "name": "AzureBastionSubnet",
+            "properties": {
+              "addressPrefix": "[parameters('bastionSubnet')]"
+            }
           }
+
         ]
       }
     }

@@ -5,7 +5,7 @@
         "bastion-vnet-name": {
             "type": "string"
         },
-        "bastion-subnet-ip-prefix": {
+        "bastionSubnet": {
             "type": "string"
         },
         "bastionHostname": {
@@ -35,7 +35,7 @@
             "name": "[concat(parameters('bastion-vnet-name'), '/', variables('bastion-subnet-name'))]",
             "location": "[resourceGroup().location]",
             "properties": {
-                "addressPrefix": "[parameters('bastion-subnet-ip-prefix')]"
+                "addressPrefix": "[parameters('bastionSubnet')]"
             }
         },
         {
