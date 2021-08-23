@@ -339,7 +339,7 @@
             "name": "bastion",
             "apiVersion": "2021-04-01",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualMachineName')]"
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachineName'))]"
             ],
             "properties": {
                 "mode": "Incremental",
