@@ -417,7 +417,7 @@
             "properties": {
                 "mode": "Incremental",
                 "templateLink": {
-                "uri": "[variables('TEMPLATES')['Win10'].Link]"
+                    "uri": "[variables('TEMPLATES')['Win10'].Link]"
                 },
                 "parameters": {
                     "WIN10Prefix":{
