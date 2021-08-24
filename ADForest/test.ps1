@@ -52,3 +52,8 @@ function New-AzureStorageAccount {
      
      
 }
+
+
+
+
+Get-AzResourceGroup -Name SignalWarrant-Domain
