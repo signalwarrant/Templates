@@ -31,7 +31,7 @@
           }
     },
     "variables": {
-      "nsgName": "[concat(parameters('myLabName'), '-NSG')]",
+      "nsgName": "[resourceId('Microsoft.Network/networkSecurityGroups', 'labNSG')]",
       "domainJoinOption": 3
     },
     "resources": [
@@ -76,7 +76,7 @@
                   }
               ],
               "networkSecurityGroup": {
-                      "id": "[resourceId('Microsoft.Network/networkSecurityGroups/', variables('nsgName'))]"
+                  "id": "[variables('nsgName')]"
               }
           }
       },
