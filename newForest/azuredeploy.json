@@ -168,17 +168,6 @@
             "metadata": {
                 "description": "Disk type for each  Windows 10 VM"
             }
-        },
-        "azurePlatform":{
-            "type":"string",
-            "defaultValue":".blob.core.windows.net/",
-            "allowedValues":[
-                ".blob.core.windows.net/",
-                ".blob.core.usgovcloudapi.net/"
-            ],
-            "metadata":{
-                "description": "Storage URI for the version of Azure you're using .blob.core.windows.net/ for Azure Commercial and .blob.core.usgovcloudapi.net/ for Azure Government"
-            }
         }
     },
     "variables": {
