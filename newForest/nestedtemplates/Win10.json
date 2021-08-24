@@ -20,6 +20,9 @@
           "subnetName": {
               "type": "string"
           },
+          "virtualNetworkName": {
+              "type": "string"
+          },
           "adminUsername": {
               "type": "string"
           },
@@ -28,10 +31,8 @@
           }
     },
     "variables": {
-      "labvNetName": "[concat(parameters('myLabName'), '-vNET')]",
       "nsgName": "[concat(parameters('myLabName'), '-NSG')]",
-      "domainJoinOption": 3,
-      "subnetName": "[parameters('subnetName')]"
+      "domainJoinOption": 3
     },
     "resources": [
       {
@@ -69,7 +70,7 @@
                               "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('WIN10Prefix'), copyIndex(), '-PIP'))]"
                           },
                           "subnet": {
-                              "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('labvNetName'), variables('subnetName'))]"
+                              "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
                           }
                       }
                   }
