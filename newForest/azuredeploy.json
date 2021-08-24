@@ -511,16 +511,16 @@
                     "uri": "[variables('TEMPLATES')['SVR22'].Link]"
                 },
                 "parameters": {
-                    "WIN10Prefix":{
+                    "SVR22Prefix":{
                         "value":"[parameters('SVR22Prefix')]"
                     },
-                    "WIN10Count":{
+                    "SVR22Count":{
                         "value": "[parameters('SVR22Count')]"
                     },
-                    "WIN10Size": {
+                    "SVR22Size": {
                         "value": "[parameters('SVR22Size')]"
                     },
-                    "WIN10OSDiskType": {
+                    "SVR22OSDiskType": {
                         "value": "[parameters('SVR22OSDiskType')]"
                     },
                     "domainName":{
