@@ -151,8 +151,7 @@
                   "Name": "[parameters('domainName')]",
                   "User": "[concat(parameters('adminUserName'),'@',parameters('domainName'))]",
                   "Restart": "true",
-                  "Options": "[variables('domainJoinOption')]",
-                  "commandToExecute": ""
+                  "Options": "[variables('domainJoinOption')]"
               },
               "protectedSettings": {
                   "Password": "[parameters('adminPassword')]"
