@@ -38,7 +38,7 @@
       {
           "name": "[concat(parameters('WIN10Prefix'), copyIndex(), '-PIP')]",
           "type": "Microsoft.Network/publicIPAddresses",
-          "apiVersion": "2019-06-01",
+          "apiVersion": "2020-11-01",
           "location": "[resourceGroup().location]",
           "copy":{
               "name":"WIN10PIPcopy",
@@ -51,7 +51,7 @@
       {
           "name": "[concat(parameters('WIN10Prefix'), copyIndex(), '-NIC')]",
           "type": "Microsoft.Network/networkInterfaces",
-          "apiVersion": "2019-06-01",
+          "apiVersion": "2020-11-01",
           "location": "[resourceGroup().location]",
           "copy":{
               "name":"WIN10NICcopy",
@@ -84,7 +84,7 @@
           "comments": "createWIN10",
           "name": "[concat(parameters('WIN10Prefix'), copyIndex())]",
           "type": "Microsoft.Compute/virtualMachines",
-          "apiVersion": "2019-07-01",
+          "apiVersion": "2021-03-01",
           "location": "[resourceGroup().location]",
           "copy":{
               "name":"WIN10VMcopy",
@@ -130,7 +130,7 @@
           "comments": "Join WIN10 to Domain",
           "type": "Microsoft.Compute/virtualMachines/extensions",
           "name": "[concat(parameters('WIN10Prefix'), copyIndex(), '/joindomain')]",
-          "apiVersion": "2019-07-01",
+          "apiVersion": "2021-03-01",
           "location": "[resourceGroup().location]",
           "copy":{
               "name":"WIN10VMDomainJoincopy",
