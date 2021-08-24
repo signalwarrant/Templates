@@ -168,6 +168,41 @@
             "metadata": {
                 "description": "Disk type for each  Windows 10 VM"
             }
+        },
+        "SVR22Count":{
+            "type":"int",
+            "defaultValue": 1,
+            "metadata":{
+                "description": "Number of Server 2022 VMs to deploy"
+            }
+        },
+        "SVR22Prefix":{
+            "type":"string",
+            "defaultValue":"WIN10CL",
+            "metadata":{
+                "description":"Naming Prefix used for the Server 2022 VMs."
+            }
+        },
+        "SVR22Size": {
+            "type": "string",
+            "defaultValue":"Standard_B2s",
+            "allowedValues":[
+                "Standard_B2s"
+            ],
+            "metadata":{
+                "description": "The size of the Server 2022 VMs"   
+            }
+        },
+        "SVR22OSDiskType": {
+            "type": "string",
+            "defaultValue":"Standard_LRS",
+            "allowedValues":[
+                "Premium_LRS",
+                "Standard_LRS"
+            ],
+            "metadata": {
+                "description": "Disk type for each  Server 2022 VM"
+            }
         }
     },
     "variables": {
@@ -177,6 +212,9 @@
             },
             "Win10": {
                 "Link": "[concat(parameters('_artifactsLocation'), 'nestedtemplates/Win10.json')]"
+            },
+            "SVR22": {
+                "Link": "[concat(parameters('_artifactsLocation'), 'nestedtemplates/SVR22.json')]"
             }
         }
     },
@@ -440,6 +478,50 @@
                     },
                     "WIN10OSDiskType": {
                         "value": "[parameters('WIN10OSDiskType')]"
+                    },
+                    "domainName":{
+                        "value":"[parameters('domainName')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetName')]"
+                    },
+                    "virtualNetworkName": {
+                        "value": "[parameters('virtualNetworkName')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "comments":"Deploy Windows SVR 22 VMs if you have chosen to do so.",
+            "name": "SVR22",
+            "apiVersion": "2021-04-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'UpdateVNetDNS')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('TEMPLATES')['SVR22'].Link]"
+                },
+                "parameters": {
+                    "WIN10Prefix":{
+                        "value":"[parameters('SVR22Prefix')]"
+                    },
+                    "WIN10Count":{
+                        "value": "[parameters('SVR22Count')]"
+                    },
+                    "WIN10Size": {
+                        "value": "[parameters('SVR22Size')]"
+                    },
+                    "WIN10OSDiskType": {
+                        "value": "[parameters('SVR22OSDiskType')]"
                     },
                     "domainName":{
                         "value":"[parameters('domainName')]"
