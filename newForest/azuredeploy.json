@@ -178,7 +178,7 @@
         },
         "SVR22Prefix":{
             "type":"string",
-            "defaultValue":"WIN10CL",
+            "defaultValue":"SVR22",
             "metadata":{
                 "description":"Naming Prefix used for the Server 2022 VMs."
             }
