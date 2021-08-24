@@ -20,21 +20,21 @@
           "domainName":{
               "type":"string"
           },
+          "subnetName": {
+              "type": "string"
+          },
           "adminUsername": {
               "type": "string"
           },
           "adminPassword": {
               "type": "secureString"
-          },
-          "azurePlatform":{
-              "type":"string"
           }
     },
     "variables": {
       "labvNetName": "[concat(parameters('myLabName'), '-vNET')]",
       "nsgName": "[concat(parameters('myLabName'), '-NSG')]",
       "domainJoinOption": 3,
-      "subnetName": "Domain"
+      "subnetName": "[parameters('subnetName')]"
     },
     "resources": [
       {

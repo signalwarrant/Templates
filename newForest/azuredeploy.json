@@ -185,6 +185,9 @@
         "TEMPLATES": {
             "Bastion": {
                 "Link": "[concat(parameters('_artifactsLocation'), 'nestedtemplates/bastion.json')]"
+            },
+            "Win10": {
+                "Link": "[concat(parameters('_artifactsLocation'), 'nestedtemplates/Win10.json')]"
             }
         }
     },
@@ -449,8 +452,8 @@
                     "adminPassword": {
                         "value": "[parameters('adminPassword')]"
                     },
-                    "azurePlatform": {
-                        "value": "[parameters('azurePlatform')]"
+                    "subnetName": {
+                        "value": "[parameters('subnetName')]"
                     }
                 }
             }
