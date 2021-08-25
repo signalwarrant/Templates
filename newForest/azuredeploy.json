@@ -203,6 +203,41 @@
             "metadata": {
                 "description": "Disk type for each  Server 2022 VM"
             }
+        },
+        "SVR19Count":{
+            "type":"int",
+            "defaultValue": 1,
+            "metadata":{
+                "description": "Number of Server 2019 VMs to deploy"
+            }
+        },
+        "SVR19Prefix":{
+            "type":"string",
+            "defaultValue":"SVR19",
+            "metadata":{
+                "description":"Naming Prefix used for the Server 2019 VMs."
+            }
+        },
+        "SVR19Size": {
+            "type": "string",
+            "defaultValue":"Standard_B2s",
+            "allowedValues":[
+                "Standard_B2s"
+            ],
+            "metadata":{
+                "description": "The size of the Server 2019 VMs"   
+            }
+        },
+        "SVR19OSDiskType": {
+            "type": "string",
+            "defaultValue":"Standard_LRS",
+            "allowedValues":[
+                "Premium_LRS",
+                "Standard_LRS"
+            ],
+            "metadata": {
+                "description": "Disk type for each  Server 2019 VM"
+            }
         }
     },
     "variables": {
@@ -215,6 +250,9 @@
             },
             "SVR22": {
                 "Link": "[concat(parameters('_artifactsLocation'), 'nestedtemplates/SVR22.json')]"
+            },
+            "SVR19": {
+                "Link": "[concat(parameters('_artifactsLocation'), 'nestedtemplates/SVR19.json')]"
             }
         }
     },
@@ -522,6 +560,50 @@
                     },
                     "SVR22OSDiskType": {
                         "value": "[parameters('SVR22OSDiskType')]"
+                    },
+                    "domainName":{
+                        "value":"[parameters('domainName')]"
+                    },
+                    "adminUsername": {
+                        "value": "[parameters('adminUsername')]"
+                    },
+                    "adminPassword": {
+                        "value": "[parameters('adminPassword')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetName')]"
+                    },
+                    "virtualNetworkName": {
+                        "value": "[parameters('virtualNetworkName')]"
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "comments":"Deploy Windows SVR 19 VMs if you have chosen to do so.",
+            "name": "SVR19",
+            "apiVersion": "2021-04-01",
+            "dependsOn": [
+                "[resourceId('Microsoft.Resources/deployments', 'UpdateVNetDNS')]"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('TEMPLATES')['SVR19'].Link]"
+                },
+                "parameters": {
+                    "SVR19Prefix":{
+                        "value":"[parameters('SVR19Prefix')]"
+                    },
+                    "SVR19Count":{
+                        "value": "[parameters('SVR19Count')]"
+                    },
+                    "SVR19Size": {
+                        "value": "[parameters('SVR19Size')]"
+                    },
+                    "SVR19OSDiskType": {
+                        "value": "[parameters('SVR19OSDiskType')]"
                     },
                     "domainName":{
                         "value":"[parameters('domainName')]"

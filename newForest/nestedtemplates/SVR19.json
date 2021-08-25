@@ -1,0 +1,164 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+          "SVR19Prefix":{
+              "type":"string"
+          },
+          "SVR19Count":{
+              "type":"int"
+          },
+          "SVR19Size": {
+              "type": "string"
+          },
+          "SVR19OSDiskType": {
+              "type": "string"
+          },
+          "domainName":{
+              "type":"string"
+          },
+          "subnetName": {
+              "type": "string"
+          },
+          "virtualNetworkName": {
+              "type": "string"
+          },
+          "adminUsername": {
+              "type": "string"
+          },
+          "adminPassword": {
+              "type": "secureString"
+          }
+    },
+    "variables": {
+      "nsgName": "[resourceId('Microsoft.Network/networkSecurityGroups', 'labNSG')]",
+      "domainJoinOption": 3
+    },
+    "resources": [
+      {
+          "name": "[concat(parameters('SVR19Prefix'), copyIndex(), '-PIP')]",
+          "type": "Microsoft.Network/publicIPAddresses",
+          "apiVersion": "2020-11-01",
+          "location": "[resourceGroup().location]",
+          "copy":{
+              "name":"SVR19PIPcopy",
+              "count":"[parameters('SVR19Count')]"
+          },
+          "properties": {
+              "publicIPAllocationMethod": "Dynamic"
+          }
+      },
+      {
+          "name": "[concat(parameters('SVR19Prefix'), copyIndex(), '-NIC')]",
+          "type": "Microsoft.Network/networkInterfaces",
+          "apiVersion": "2020-11-01",
+          "location": "[resourceGroup().location]",
+          "copy":{
+              "name":"SVR19NICcopy",
+              "count":"[parameters('SVR19Count')]"
+          },
+          "dependsOn": [
+              "[concat(parameters('SVR19Prefix'), copyIndex(), '-PIP')]"
+          ],
+          "properties": {
+              "ipConfigurations": [
+                  {
+                      "name": "ipConfig",
+                      "properties": {
+                          "privateIPAllocationMethod": "Dynamic",
+                          "publicIPAddress": {
+                              "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('SVR19Prefix'), copyIndex(), '-PIP'))]"
+                          },
+                          "subnet": {
+                              "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
+                          }
+                      }
+                  }
+              ],
+              "networkSecurityGroup": {
+                  "id": "[variables('nsgName')]"
+              }
+          }
+      },
+      {
+          "comments": "createSVR19",
+          "name": "[concat(parameters('SVR19Prefix'), copyIndex())]",
+          "type": "Microsoft.Compute/virtualMachines",
+          "apiVersion": "2021-03-01",
+          "location": "[resourceGroup().location]",
+          "copy":{
+              "name":"SVR19VMcopy",
+              "count":"[parameters('SVR19Count')]"
+          },
+          "dependsOn":[
+              "[concat('Microsoft.Network/networkInterfaces/', parameters('SVR19Prefix'), copyIndex(), '-NIC')]"
+          ],
+          "properties": {
+              "hardwareProfile": {
+                  "vmSize": "[parameters('SVR19Size')]"
+          },
+          "osProfile": {
+              "computerName": "[concat(parameters('SVR19Prefix'), copyIndex())]",
+              "adminUsername": "[parameters('adminUserName')]",
+              "adminPassword": "[parameters('adminPassword')]"
+          },
+          "storageProfile": {
+              "osDisk": {
+                  "name":"[concat(parameters('SVR19Prefix'), copyIndex(), 'sys')]",
+                  "createOption": "fromImage",
+                  "managedDisk": {
+                      "storageAccountType": "[parameters('SVR19OSDiskType')]"
+                  }
+              },
+              "imageReference": {
+                  "publisher": "MicrosoftWindowsServer",
+                  "offer": "WindowsServer",
+                  "sku": "2019-datacenter-smalldisk",
+                  "version": "latest"
+              }
+          },
+          "networkProfile": {
+              "networkInterfaces": [
+                  {
+                      "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('SVR19Prefix'), copyIndex(), '-NIC'))]"
+                  }
+              ]
+          }
+        }
+      },
+      {
+          "comments": "Join SVR19 to Domain",
+          "type": "Microsoft.Compute/virtualMachines/extensions",
+          "name": "[concat(parameters('SVR19Prefix'), copyIndex(), '/joindomain')]",
+          "apiVersion": "2021-03-01",
+          "location": "[resourceGroup().location]",
+          "copy":{
+              "name":"SVR19VMDomainJoincopy",
+              "count":"[parameters('SVR19Count')]"
+          },
+          "tags": {
+              "displayName": "JsonADDomainExtension"
+          },
+          "dependsOn": [
+              "[concat('Microsoft.Compute/virtualMachines/',parameters('SVR19Prefix'), copyIndex())]"
+          ],
+          "properties": {
+              "publisher": "Microsoft.Compute",
+              "type": "JsonADDomainExtension",
+              "typeHandlerVersion": "1.3",
+              "autoUpgradeMinorVersion": true,
+              "settings": {
+                  "Name": "[parameters('domainName')]",
+                  "User": "[concat(parameters('adminUserName'),'@',parameters('domainName'))]",
+                  "Restart": "true",
+                  "Options": "[variables('domainJoinOption')]"
+              },
+              "protectedSettings": {
+                  "Password": "[parameters('adminPassword')]"
+          }
+        }
+      }
+    ],
+    "outputs": {},
+    "functions": []
+  }
