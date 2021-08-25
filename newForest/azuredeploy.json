@@ -22,13 +22,6 @@
                 "description": "The FQDN of the Active Directory Domain to be created"
             }
         },
-        "dnsPrefix": {
-            "type": "string",
-            "defaultValue": "chiefslab",
-            "metadata": {
-                "description": "The DNS prefix for the public IP address used by the Load Balancer"
-            }
-        },
         "vmSize": {
             "type": "string",
             "defaultValue": "Standard_B2s",
@@ -102,13 +95,6 @@
         "subnetRange": {
             "type": "string",
             "defaultValue": "10.0.1.0/24",
-            "metadata": {
-                "description": "Subnet IP range."
-            }
-        },
-        "publicIPAddressName": {
-            "type": "string",
-            "defaultValue": "labPIP",
             "metadata": {
                 "description": "Subnet IP range."
             }
@@ -264,18 +250,6 @@
             "location": "[resourceGroup().location]",
             "properties": {
 
-            }
-        },
-        {
-            "type": "Microsoft.Network/publicIPAddresses",
-            "apiVersion": "2020-11-01",
-            "name": "[parameters('publicIPAddressName')]",
-            "location": "[parameters('location')]",
-            "properties": {
-                "publicIPAllocationMethod": "Static",
-                "dnsSettings": {
-                    "domainNameLabel": "[parameters('dnsPrefix')]"
-                }
             }
         },
         {

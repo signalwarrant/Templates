@@ -36,19 +36,6 @@
     },
     "resources": [
       {
-          "name": "[concat(parameters('SVR19Prefix'), copyIndex(), '-PIP')]",
-          "type": "Microsoft.Network/publicIPAddresses",
-          "apiVersion": "2020-11-01",
-          "location": "[resourceGroup().location]",
-          "copy":{
-              "name":"SVR19PIPcopy",
-              "count":"[parameters('SVR19Count')]"
-          },
-          "properties": {
-              "publicIPAllocationMethod": "Dynamic"
-          }
-      },
-      {
           "name": "[concat(parameters('SVR19Prefix'), copyIndex(), '-NIC')]",
           "type": "Microsoft.Network/networkInterfaces",
           "apiVersion": "2020-11-01",
@@ -57,18 +44,12 @@
               "name":"SVR19NICcopy",
               "count":"[parameters('SVR19Count')]"
           },
-          "dependsOn": [
-              "[concat(parameters('SVR19Prefix'), copyIndex(), '-PIP')]"
-          ],
           "properties": {
               "ipConfigurations": [
                   {
                       "name": "ipConfig",
                       "properties": {
                           "privateIPAllocationMethod": "Dynamic",
-                          "publicIPAddress": {
-                              "id": "[resourceId('Microsoft.Network/publicIPAddresses', concat(parameters('SVR19Prefix'), copyIndex(), '-PIP'))]"
-                          },
                           "subnet": {
                               "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('virtualNetworkName'), parameters('subnetName'))]"
                           }
