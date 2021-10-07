@@ -68,21 +68,21 @@ resource DC 'Microsoft.Compute/virtualMachines@2021-04-01' = {
   }
 }
 
-module storageModule 'domainSA.bicep' = {
+module storageModule 'modules/domainSA.bicep' = {
   name: 'storageDeploy'
   params: {
     storagePrefix: 'sig'
   }
 }
 
-module nicModule 'nic.bicep' = {
+module nicModule 'modules/nic.bicep' = {
   name: 'nicDeploy'
   params: {
     vmName: vmName
   }
 }
 
-module vNetModule 'vNet.bicep' = {
+module vNetModule 'modules/vNet.bicep' = {
   name: 'vNetDeploy'
   params: {
     vmName: vmName
@@ -91,7 +91,7 @@ module vNetModule 'vNet.bicep' = {
   }
 }
 
-module pipModule 'PIP.bicep' = {
+module pipModule 'modules/PIP.bicep' = {
   name: 'pipDeploy'
   params: {
     vmName: vmName
