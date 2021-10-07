@@ -16,10 +16,10 @@ if (!$swRG) {
 #Write-Host -ForegroundColor Green "Testing Deployment File`n`n"
 #Test-AzResourceGroupDeployment -TemplateFile $templateFile -ResourceGroupName $resourceGroupName -Verbose
 
-Write-Host -ForegroundColor Green "`n`n Deployment beginning...`n`n "
+Write-Host -ForegroundColor Green "`n Deployment beginning...`n"
 
 New-AzResourceGroupDeployment -TemplateFile $templateFile -Name $deploymentName -ResourceGroupName $resourceGroupName -Verbose
 
-Write-Host -ForegroundColor Cyan "`n Mission Compelte!!"
+Write-Host -ForegroundColor Cyan "Mission Compelte!!"
 
 
