@@ -104,13 +104,13 @@ module pipModule 'modules/PIP.bicep' = {
   }
 }
 
-resource vmAADLogin 'Microsoft.Compute/virtualMachines/extensions@2021-04-01' = {
-  name: 'AADLogin'
+resource mdeAgent 'Microsoft.Compute/virtualMachines/extensions@2021-04-01' = {
+  name: 'mdeAgent'
   location: location
   parent: DC
   properties: {
-    publisher: 'Microsoft.Azure.ActiveDirectory'
-    type: 'AADLoginForWindows'
+    publisher: 'Microsoft.Azure.AzureDefenderForServers'
+    type: 'MDE.Windows'
     typeHandlerVersion: '1.0'
     autoUpgradeMinorVersion: true
   }
