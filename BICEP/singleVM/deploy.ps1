@@ -5,9 +5,6 @@ $today = Get-Date -Format 'MM-dd-yyyy'
 $deploymentName = "singleVM-$today"
 $myIP = (Invoke-WebRequest -uri "http://ifconfig.me/ip").Content
 
-
-
-
 $swRG = Get-AzResourceGroup | Where-Object {$_.ResourceGroupName -eq $resourceGroupName}
 if (!$swRG) {
   New-AzResourceGroup -Name $resourceGroupName -Location $location

@@ -38,6 +38,12 @@ resource DC 'Microsoft.Compute/virtualMachines@2021-04-01' = {
       computerName: computerName
       adminUsername: adminUsername
       adminPassword: adminPassword
+      windowsConfiguration: {
+        patchSettings: {
+          enableHotpatching: false
+          patchMode: 'AutomaticByOS'
+        }
+      }
     }
     storageProfile: {
       imageReference: {
@@ -95,6 +101,18 @@ module pipModule 'modules/PIP.bicep' = {
   name: 'pipDeploy'
   params: {
     vmName: vmName
+  }
+}
+
+resource vmAADLogin 'Microsoft.Compute/virtualMachines/extensions@2021-04-01' = {
+  name: 'AADLogin'
+  location: location
+  parent: DC
+  properties: {
+    publisher: 'Microsoft.Azure.ActiveDirectory'
+    type: 'AADLoginForWindows'
+    typeHandlerVersion: '1.0'
+    autoUpgradeMinorVersion: true
   }
 }
 
