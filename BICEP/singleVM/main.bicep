@@ -1,5 +1,5 @@
 @description('This is the name for the VM you will see in the Azure portal')
-param vmName string = 'DC' 
+param vmName string = 'DC1' 
 
 @description('The resource group where the resource will be created, in my case the parent RG')
 param location string = resourceGroup().location
@@ -9,6 +9,18 @@ param vmSize string = 'Standard_A2_v2'
 
 @description('This can be different than the vmName. Computername is the value inside the VM OS.')
 param computerName string = 'DC'
+
+@minLength(3)
+@maxLength(11)
+@description('Prefix that the storage account begins with')
+param storagePrefix string = 'sig'
+
+@allowed([
+  'Standard_LRS'
+  'Premium_LRS'
+])
+@description('Storage Account SKU')
+param storageSKU string = 'Standard_LRS'
 
 @secure()
 @description('Admin username')
@@ -26,6 +38,11 @@ param addressSpace string = '10.0.0.0/16'
 
 @description('Subnet(s) for the Virtual Network')
 param vnetSubnet string = '10.0.1.0/24'
+
+@description('The public IP address of my workstation')
+param myIP string 
+
+var uniqueStorageName = '${storagePrefix}${uniqueString(resourceGroup().id)}'
 
 resource DC 'Microsoft.Compute/virtualMachines@2021-04-01' = {
   name: vmName
@@ -61,62 +78,101 @@ resource DC 'Microsoft.Compute/virtualMachines@2021-04-01' = {
     networkProfile: {
       networkInterfaces: [
         {
-          id: nicModule.outputs.nicID
+          id: vmNIC.id
         }
       ]
     }
     diagnosticsProfile: {
       bootDiagnostics: {
         enabled: true
-        storageUri: storageModule.outputs.storageEndpoint
+        storageUri: domainSA.properties.primaryEndpoints.blob
       }
     }
   }
 }
 
-module storageModule 'modules/domainSA.bicep' = {
-  name: 'storageDeploy'
-  params: {
-    storagePrefix: 'sig'
-  }
-}
-
-module nicModule 'modules/nic.bicep' = {
-  name: 'nicDeploy'
-  params: {
-    vmName: vmName
-  }
-}
-
-module vNetModule 'modules/vNet.bicep' = {
-  name: 'vNetDeploy'
-  params: {
-    vmName: vmName
-    addressSpace: addressSpace
-    vnetSubnet: vnetSubnet
-  }
-}
-
-module pipModule 'modules/PIP.bicep' = {
-  name: 'pipDeploy'
-  params: {
-    vmName: vmName
-  }
-}
-
-resource mdeAgent 'Microsoft.Compute/virtualMachines/extensions@2021-04-01' = {
-  name: 'mdeAgent'
+resource domainSA 'Microsoft.Storage/storageAccounts@2019-06-01' = {
+  name: uniqueStorageName
   location: location
-  parent: DC
+  sku: {
+    name: storageSKU
+  }
+  kind: 'StorageV2'
   properties: {
-    publisher: 'Microsoft.Azure.AzureDefenderForServers'
-    type: 'MDE.Windows'
-    typeHandlerVersion: '1.0'
-    autoUpgradeMinorVersion: true
+    supportsHttpsTrafficOnly: true
   }
 }
 
-// Outputs from this template that will be passed to other templates
-output vmName string = vmName
-output addressSpace string = addressSpace
-output vnetSubnet string = vnetSubnet
+resource vmNIC 'Microsoft.Network/networkInterfaces@2021-02-01' = {
+  name: '${vmName}-nic'
+  location: location
+  properties: {
+    ipConfigurations: [
+      {
+        name: '${vmName}-IPConfig'
+        properties: {
+          privateIPAllocationMethod: 'Dynamic'
+          publicIPAddress: {
+            id: resourceId('Microsoft.Network/publicIPAddresses', '${vmName}-PIP')
+          }
+          subnet: {
+            id: resourceId('Microsoft.Network/virtualNetworks/subnets', '${vmName}-vNet', '${vmName}-Subnet1')
+          }
+        }
+      }
+    ]
+  }
+}
+
+resource vmVNET 'Microsoft.Network/virtualNetworks@2019-11-01' = {
+  name: '${vmName}-vNet'
+  location: location
+  properties: {
+    addressSpace: {
+      addressPrefixes: [
+        addressSpace
+      ]
+    }
+    subnets: [
+      {
+        name: '${vmName}-Subnet1'
+        properties: {
+          addressPrefix: vnetSubnet
+        }
+      }
+    ]
+  }
+}
+
+resource publicIPAddress 'Microsoft.Network/publicIPAddresses@2021-02-01' = {
+  name: '${vmName}-PIP'
+  location: location
+  properties: {
+    publicIPAllocationMethod: 'Dynamic'
+
+  }
+}
+
+resource vmNSG 'Microsoft.Network/networkSecurityGroups@2018-08-01' = {
+  name: '${vmName}-nsg'
+  location: location
+  properties: {
+    securityRules: [
+      {
+        name: '${vmName}-allowRDP'
+        properties: {
+          description: 'description'
+          protocol: 'Tcp'
+          sourcePortRange: '*'
+          destinationPortRange: '3389'
+          sourceAddressPrefix: myIP
+          destinationAddressPrefix: '*'
+          access: 'Allow'
+          priority: 100
+          direction: 'Inbound'
+        }
+      }
+    ]
+  }
+}
+
